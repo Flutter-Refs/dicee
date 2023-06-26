@@ -1,4 +1,9 @@
+// ignore_for_file: avoid_print
+
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'dart:core';
 
 void main() {
   runApp(const MyApp());
@@ -13,36 +18,65 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       title: 'Dicee',
       home: Scaffold(
-        backgroundColor: Colors.amber,
-        body: SafeArea(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <MyImage>[
-              MyImage('lib/assets/images/dice1.png'),
-              MyImage('lib/assets/images/dice2.png'),
-              MyImage('lib/assets/images/dice3.png'),
-              MyImage('lib/assets/images/dice4.png'),
-              MyImage('lib/assets/images/dice5.png'),
-              MyImage('lib/assets/images/dice6.png'),
-            ],
-          ),
-        ),
+        backgroundColor: Color.fromARGB(255, 180, 0, 0),
+        body: DicePage(),
       ),
     );
   }
 }
 
-class MyImage extends StatelessWidget {
-  final String imgPath;
+class DicePage extends StatefulWidget {
+  const DicePage({super.key});
 
-  const MyImage(this.imgPath, {super.key});
+  @override
+  State<DicePage> createState() => _DicePageState();
+}
+
+class _DicePageState extends State<DicePage> {
+  int leftDiceNumber = 1;
+  int rightDiceNumber = 1;
+
+  int get getRandomIndex => Random().nextInt(6) + 1;
+
+  void rollDices() {
+    leftDiceNumber = getRandomIndex;
+    rightDiceNumber = getRandomIndex;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Image(
-      image: AssetImage(imgPath),
-      width: 100,
-      height: 100,
+    return Scaffold(
+      backgroundColor: Colors.red,
+      // app bar
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text("Dicee"),
+        backgroundColor: Colors.red,
+      ),
+      // body
+      body: Center(
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              child: TextButton(
+                onPressed: () => setState(
+                  () => rollDices(),
+                ),
+                child: Image.asset('lib/assets/images/dice$leftDiceNumber.png'),
+              ),
+            ),
+            Expanded(
+              child: TextButton(
+                onPressed: () => setState(
+                  () => rollDices(),
+                ),
+                child:
+                    Image.asset('lib/assets/images/dice$rightDiceNumber.png'),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
